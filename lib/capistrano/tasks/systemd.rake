@@ -1,8 +1,8 @@
 namespace :load do
 	task :defaults do
-		set :systemd_unit, ->{ fetch :application }
-		set :systemd_use_sudo, false
-		set :systemd_roles, %w(app)
+		set :systemd_unit, fetch(:systemd_unit, fetch(:application))
+		set :systemd_use_sudo, fetch(:systemd_use_sudo, false)
+		set :systemd_roles, fetch(:systemd_roles, %w(app))
 	end
 end
 
@@ -19,7 +19,7 @@ namespace :systemd do
 	desc "Show the status of service"
 	task :status do
 		on roles fetch :systemd_roles do
-			systemctl :status, fetch(:systemd_unit)
+			systemctl :status, "--no-pager", fetch(:systemd_unit)
 		end
 	end
 
